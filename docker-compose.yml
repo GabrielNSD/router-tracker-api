@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  router-api:
+    container_name: backend
+    build: ./
+    #command: go run main.go
+    working_dir: /usr/src/api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/usr/src/api
+    environment:
+      POSTGRES_URI: postgres://useruser:password@postgres:5432/reouter-docker
+    links:
+      - postgres
+  
+  postgres:
+    container_name: router-database
+    build: ./database
+    restart: always
+    volumes:
+      - "./data/database:/var/lib/postgresql/data"
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_USER: useruser
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: router-docker
+      POSTGRES_HOST: postgres
